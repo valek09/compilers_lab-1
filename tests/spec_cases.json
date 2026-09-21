@@ -1,0 +1,1060 @@
+[
+  {
+    "number": 1,
+    "name": "1 — write константы",
+    "ast": {
+      "write": {
+        "const": 5
+      }
+    },
+    "input": [],
+    "output": [
+      5
+    ]
+  },
+  {
+    "number": 2,
+    "name": "2 — присваивание и переменная",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 5
+            }
+          }
+        },
+        "right": {
+          "write": {
+            "var": "x"
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      5
+    ]
+  },
+  {
+    "number": 3,
+    "name": "3 — бинарная арифметика",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "binop": "+",
+              "left": {
+                "const": 2
+              },
+              "right": {
+                "const": 3
+              }
+            }
+          }
+        },
+        "right": {
+          "write": {
+            "var": "x"
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      5
+    ]
+  },
+  {
+    "number": 4,
+    "name": "4 — несколько арифметических операций",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "-",
+            "left": {
+              "const": 10
+            },
+            "right": {
+              "const": 3
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "binop": "*",
+                "left": {
+                  "const": 4
+                },
+                "right": {
+                  "const": 5
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "binop": "/",
+                    "left": {
+                      "const": 10
+                    },
+                    "right": {
+                      "const": 3
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "binop": "%",
+                    "left": {
+                      "const": 10
+                    },
+                    "right": {
+                      "const": 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      7,
+      20,
+      3,
+      1
+    ]
+  },
+  {
+    "number": 5,
+    "name": "5 — приоритет операций",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "+",
+            "left": {
+              "const": 2
+            },
+            "right": {
+              "binop": "*",
+              "left": {
+                "const": 3
+              },
+              "right": {
+                "const": 4
+              }
+            }
+          }
+        },
+        "right": {
+          "write": {
+            "binop": "*",
+            "left": {
+              "binop": "+",
+              "left": {
+                "const": 2
+              },
+              "right": {
+                "const": 3
+              }
+            },
+            "right": {
+              "const": 4
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      14,
+      20
+    ]
+  },
+  {
+    "number": 6,
+    "name": "6 — сравнения",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "==",
+            "left": {
+              "const": 5
+            },
+            "right": {
+              "const": 5
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "binop": "!=",
+                "left": {
+                  "const": 5
+                },
+                "right": {
+                  "const": 5
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "binop": "<",
+                    "left": {
+                      "const": 3
+                    },
+                    "right": {
+                      "const": 5
+                    }
+                  }
+                },
+                "right": {
+                  "seq": {
+                    "left": {
+                      "write": {
+                        "binop": "<=",
+                        "left": {
+                          "const": 3
+                        },
+                        "right": {
+                          "const": 3
+                        }
+                      }
+                    },
+                    "right": {
+                      "seq": {
+                        "left": {
+                          "write": {
+                            "binop": ">",
+                            "left": {
+                              "const": 7
+                            },
+                            "right": {
+                              "const": 2
+                            }
+                          }
+                        },
+                        "right": {
+                          "write": {
+                            "binop": ">=",
+                            "left": {
+                              "const": 7
+                            },
+                            "right": {
+                              "const": 7
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "number": 7,
+    "name": "7 — логические операции 0/1",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "&&",
+            "left": {
+              "const": 1
+            },
+            "right": {
+              "const": 1
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "binop": "&&",
+                "left": {
+                  "const": 1
+                },
+                "right": {
+                  "const": 0
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "binop": "!!",
+                    "left": {
+                      "const": 0
+                    },
+                    "right": {
+                      "const": 1
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "binop": "!!",
+                    "left": {
+                      "const": 0
+                    },
+                    "right": {
+                      "const": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1,
+      0,
+      1,
+      0
+    ]
+  },
+  {
+    "number": 8,
+    "name": "8 — ненулевые операнды в логических операциях",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "&&",
+            "left": {
+              "const": 5
+            },
+            "right": {
+              "const": 2
+            }
+          }
+        },
+        "right": {
+          "write": {
+            "binop": "!!",
+            "left": {
+              "const": 0
+            },
+            "right": {
+              "const": 7
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1,
+      1
+    ]
+  },
+  {
+    "number": 9,
+    "name": "9 — if без else",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 5
+            }
+          }
+        },
+        "right": {
+          "if": {
+            "cond": {
+              "binop": "==",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 5
+              }
+            },
+            "then": {
+              "write": {
+                "const": 1
+              }
+            },
+            "else": "skip"
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1
+    ]
+  },
+  {
+    "number": 10,
+    "name": "10 — if / else",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 3
+            }
+          }
+        },
+        "right": {
+          "if": {
+            "cond": {
+              "binop": ">",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 5
+              }
+            },
+            "then": {
+              "write": {
+                "const": 1
+              }
+            },
+            "else": {
+              "write": {
+                "const": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      2
+    ]
+  },
+  {
+    "number": 11,
+    "name": "11 — elif",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 5
+            }
+          }
+        },
+        "right": {
+          "if": {
+            "cond": {
+              "binop": "<",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 5
+              }
+            },
+            "then": {
+              "write": {
+                "const": 1
+              }
+            },
+            "else": {
+              "if": {
+                "cond": {
+                  "binop": "==",
+                  "left": {
+                    "var": "x"
+                  },
+                  "right": {
+                    "const": 5
+                  }
+                },
+                "then": {
+                  "write": {
+                    "const": 2
+                  }
+                },
+                "else": {
+                  "write": {
+                    "const": 3
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      2
+    ]
+  },
+  {
+    "number": 12,
+    "name": "12 — while",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 0
+            }
+          }
+        },
+        "right": {
+          "while": {
+            "cond": {
+              "binop": "<",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 3
+              }
+            },
+            "body": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "x"
+                  }
+                },
+                "right": {
+                  "assn": {
+                    "dst": "x",
+                    "src": {
+                      "binop": "+",
+                      "left": {
+                        "var": "x"
+                      },
+                      "right": {
+                        "const": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "number": 13,
+    "name": "13 — +=",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 1
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "assn": {
+                "dst": "x",
+                "src": {
+                  "binop": "+",
+                  "left": {
+                    "var": "x"
+                  },
+                  "right": {
+                    "const": 2
+                  }
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "var": "x"
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      3
+    ]
+  },
+  {
+    "number": 14,
+    "name": "14 — do while",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 0
+            }
+          }
+        },
+        "right": {
+          "do": {
+            "body": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "x"
+                  }
+                },
+                "right": {
+                  "assn": {
+                    "dst": "x",
+                    "src": {
+                      "binop": "+",
+                      "left": {
+                        "var": "x"
+                      },
+                      "right": {
+                        "const": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "cond": {
+              "binop": "<",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 3
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "number": 15,
+    "name": "15 — do while выполняется хотя бы один раз",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 10
+            }
+          }
+        },
+        "right": {
+          "do": {
+            "body": {
+              "write": {
+                "var": "x"
+              }
+            },
+            "cond": {
+              "binop": "<",
+              "left": {
+                "var": "x"
+              },
+              "right": {
+                "const": 3
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      10
+    ]
+  },
+  {
+    "number": 16,
+    "name": "16 — for преобразуется в while",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "i",
+            "src": {
+              "const": 0
+            }
+          }
+        },
+        "right": {
+          "while": {
+            "cond": {
+              "binop": "<",
+              "left": {
+                "var": "i"
+              },
+              "right": {
+                "const": 3
+              }
+            },
+            "body": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "i"
+                  }
+                },
+                "right": {
+                  "assn": {
+                    "dst": "i",
+                    "src": {
+                      "binop": "+",
+                      "left": {
+                        "var": "i"
+                      },
+                      "right": {
+                        "const": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "number": 17,
+    "name": "17 — read",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "x"
+        },
+        "right": {
+          "write": {
+            "var": "x"
+          }
+        }
+      }
+    },
+    "input": [
+      42
+    ],
+    "output": [
+      42
+    ]
+  },
+  {
+    "number": 18,
+    "name": "18 — read произвольной переменной",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "y"
+        },
+        "right": {
+          "write": {
+            "var": "y"
+          }
+        }
+      }
+    },
+    "input": [
+      10
+    ],
+    "output": [
+      10
+    ]
+  },
+  {
+    "number": 19,
+    "name": "19 — недостаточно входных данных",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "x"
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "read": "y"
+            },
+            "right": {
+              "write": {
+                "binop": "+",
+                "left": {
+                  "var": "x"
+                },
+                "right": {
+                  "var": "y"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [
+      10
+    ],
+    "error": "L0.Stmt.No_input"
+  },
+  {
+    "number": 20,
+    "name": "20 — skip",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "const": 1
+          }
+        },
+        "right": {
+          "seq": {
+            "left": "skip",
+            "right": {
+              "write": {
+                "const": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1,
+      2
+    ]
+  },
+  {
+    "number": 21,
+    "name": "21 — неопределённая переменная",
+    "ast": {
+      "write": {
+        "var": "x"
+      }
+    },
+    "input": [],
+    "error": "L0.State.Undefined_variable(\"x\")"
+  },
+  {
+    "number": 22,
+    "name": "22 — деление на ноль",
+    "ast": {
+      "write": {
+        "binop": "/",
+        "left": {
+          "const": 10
+        },
+        "right": {
+          "const": 0
+        }
+      }
+    },
+    "input": [],
+    "error": "Division_by_zero"
+  },
+  {
+    "number": 23,
+    "name": "23 — ненулевое условие истинно",
+    "ast": {
+      "if": {
+        "cond": {
+          "const": 5
+        },
+        "then": {
+          "write": {
+            "const": 1
+          }
+        },
+        "else": {
+          "write": {
+            "const": 2
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      1
+    ]
+  },
+  {
+    "number": 24,
+    "name": "24 — ноль ложен",
+    "ast": {
+      "if": {
+        "cond": {
+          "const": 0
+        },
+        "then": {
+          "write": {
+            "const": 1
+          }
+        },
+        "else": {
+          "write": {
+            "const": 2
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      2
+    ]
+  },
+  {
+    "number": 25,
+    "name": "25 — блок не создаёт scope",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "const": 1
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "seq": {
+                "left": {
+                  "assn": {
+                    "dst": "x",
+                    "src": {
+                      "const": 2
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "var": "x"
+                  }
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "var": "x"
+              }
+            }
+          }
+        }
+      }
+    },
+    "input": [],
+    "output": [
+      2,
+      2
+    ]
+  },
+  {
+    "number": 26,
+    "name": "26 — отсутствие short-circuit у &&",
+    "ast": {
+      "write": {
+        "binop": "&&",
+        "left": {
+          "const": 0
+        },
+        "right": {
+          "binop": "/",
+          "left": {
+            "const": 10
+          },
+          "right": {
+            "const": 0
+          }
+        }
+      }
+    },
+    "input": [],
+    "error": "Division_by_zero"
+  },
+  {
+    "number": 27,
+    "name": "27 — отсутствие short-circuit у !!",
+    "ast": {
+      "write": {
+        "binop": "!!",
+        "left": {
+          "const": 1
+        },
+        "right": {
+          "binop": "/",
+          "left": {
+            "const": 10
+          },
+          "right": {
+            "const": 0
+          }
+        }
+      }
+    },
+    "input": [],
+    "error": "Division_by_zero"
+  }
+]
