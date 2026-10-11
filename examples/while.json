@@ -1,0 +1,48 @@
+{
+  "seq": {
+    "left": {
+      "assn": {
+        "dst": "x",
+        "src": {
+          "const": 0
+        }
+      }
+    },
+    "right": {
+      "while": {
+        "cond": {
+          "binop": "<",
+          "left": {
+            "var": "x"
+          },
+          "right": {
+            "const": 3
+          }
+        },
+        "body": {
+          "seq": {
+            "left": {
+              "write": {
+                "var": "x"
+              }
+            },
+            "right": {
+              "assn": {
+                "dst": "x",
+                "src": {
+                  "binop": "+",
+                  "left": {
+                    "var": "x"
+                  },
+                  "right": {
+                    "const": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

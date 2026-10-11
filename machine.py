@@ -17,7 +17,7 @@ NO_ARGUMENT_INSTRUCTIONS = {"READ", "WRITE"}
 
 
 def decode_program(program):
-    """Проверяет JSON-представление и возвращает список (opcode, operand)."""
+    """Возвращает исполняемые инструкции и адреса меток (без самих LABEL)."""
     if not isinstance(program, list):
         raise ValueError("Программа должна быть JSON-массивом")
 
@@ -43,8 +43,11 @@ def decode_program(program):
         if opcode == "LABEL":
             if operand in labels:
                 raise ValueError(f"Повторная метка: {operand}")
-            labels[operand] = position
-        instructions.append((opcode, operand))
+            # Метка указывает на следующую команду и не требует шага VM.
+            # Несколько меток подряд могут обозначать один и тот же адрес.
+            labels[operand] = len(instructions)
+        else:
+            instructions.append((opcode, operand))
 
     for opcode, operand in instructions:
         if opcode in {"JMP", "JZ", "JNZ"} and operand not in labels:
@@ -52,8 +55,10 @@ def decode_program(program):
     return instructions, labels
 
 
-def run(program, values=()):
-    """Исполняет программу и возвращает значения, переданные в WRITE."""
+def run(program, values=(), *, stats=None):
+
+    if stats is not None:
+        stats["steps"] = 0
     instructions, labels = decode_program(program)
     if any(type(value) is not int for value in values):
         raise ValueError("Входные значения должны быть целыми числами")
@@ -69,6 +74,8 @@ def run(program, values=()):
     while pc < len(instructions):
         opcode, operand = instructions[pc]
         pc += 1
+        if stats is not None:
+            stats["steps"] += 1
         if opcode == "READ":
             if input_position >= len(input_values):
                 raise RuntimeError("L0.Stmt.No_input")
@@ -95,7 +102,6 @@ def run(program, values=()):
         elif opcode == "JNZ":
             if pop() != 0:
                 pc = labels[operand]
-        # LABEL intentionally does nothing.
     return output
 
 
@@ -104,12 +110,15 @@ def main():
     parser.add_argument("program", help="путь к JSON-программе; '-' — прочитать из stdin")
     parser.add_argument("--input", nargs="*", type=int, metavar="N", default=[],
                         help="целые значения для READ")
+    parser.add_argument("--stats", action="store_true",
+                        help="после успешного выполнения вывести число шагов в stderr")
     args = parser.parse_args()
+    stats = {} if args.stats else None
     try:
         source = sys.stdin if args.program == "-" else open(args.program, encoding="utf-8")
         with source:
             program = json.load(source)
-        result = run(program, args.input)
+        result = run(program, args.input, stats=stats)
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"Ошибка входных данных: {error}", file=sys.stderr)
         return 2
@@ -118,6 +127,8 @@ def main():
         return 1
     if result:
         print("; ".join(map(str, result)))
+    if stats is not None:
+        print(f"Шагов: {stats['steps']}", file=sys.stderr)
     return 0
 
 

@@ -51,13 +51,16 @@ class Compiler:
             self.expression(value)
             self.emit("WRITE")
         elif opcode == "if":
-            otherwise, done = self.new_label(), self.new_label()
+            has_else = value["else"] != "skip"
+            otherwise = self.new_label()
+            done = self.new_label() if has_else else otherwise
             self.expression(value["cond"])
             self.emit("JZ", otherwise)
             self.statement(value["then"])
-            self.emit("JMP", done)
-            self.emit("LABEL", otherwise)
-            self.statement(value["else"])
+            if has_else:
+                self.emit("JMP", done)
+                self.emit("LABEL", otherwise)
+                self.statement(value["else"])
             self.emit("LABEL", done)
         elif opcode == "while":
             start, done = self.new_label(), self.new_label()
