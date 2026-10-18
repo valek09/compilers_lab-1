@@ -1,0 +1,7 @@
+{
+    read(list);
+    while (list[0]) {
+        write(list[1]);
+        list = list[2];
+    }
+}
