@@ -1,0 +1,3560 @@
+[
+  {
+    "name": "arrays",
+    "source": "{ a = [1, 2, 3]; write(a); write(a.length); write(a[1]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "array": [
+                {
+                  "const": 1
+                },
+                {
+                  "const": 2
+                },
+                {
+                  "const": 3
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "var": "a"
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "length": {
+                      "var": "a"
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "elem": {
+                      "var": "a"
+                    },
+                    "index": {
+                      "const": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "CONST": 3
+      },
+      {
+        "ARRAY": 3
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "LD": "a"
+      },
+      "WRITE",
+      {
+        "LD": "a"
+      },
+      "LENGTH",
+      "WRITE",
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[1, 2, 3], 3, 2",
+      "error": ""
+    },
+    "sm": {
+      "output": "[1, 2, 3], 3, 2",
+      "error": ""
+    }
+  },
+  {
+    "name": "nested_set",
+    "source": "{ a = [[1], [2]]; a[1][0] += 3; write(a); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "const": 1
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "const": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "set": {
+                "dst": {
+                  "elem": {
+                    "var": "a"
+                  },
+                  "index": {
+                    "const": 1
+                  }
+                },
+                "idx": {
+                  "const": 0
+                },
+                "value": {
+                  "binop": "+",
+                  "left": {
+                    "elem": {
+                      "elem": {
+                        "var": "a"
+                      },
+                      "index": {
+                        "const": 1
+                      }
+                    },
+                    "index": {
+                      "const": 0
+                    }
+                  },
+                  "right": {
+                    "const": 3
+                  }
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "var": "a"
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      {
+        "CONST": 0
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      {
+        "CONST": 3
+      },
+      {
+        "BINOP": "+"
+      },
+      "SET",
+      {
+        "LD": "a"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[[1], [5]]",
+      "error": ""
+    },
+    "sm": {
+      "output": "[[1], [5]]",
+      "error": ""
+    }
+  },
+  {
+    "name": "array_alias",
+    "source": "{ a = [1]; b = a; write(a); a[0] = 2; write(b); write(a == [2]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "array": [
+                {
+                  "const": 1
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "assn": {
+                "dst": "b",
+                "src": {
+                  "var": "a"
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "a"
+                  }
+                },
+                "right": {
+                  "seq": {
+                    "left": {
+                      "set": {
+                        "dst": {
+                          "var": "a"
+                        },
+                        "idx": {
+                          "const": 0
+                        },
+                        "value": {
+                          "const": 2
+                        }
+                      }
+                    },
+                    "right": {
+                      "seq": {
+                        "left": {
+                          "write": {
+                            "var": "b"
+                          }
+                        },
+                        "right": {
+                          "write": {
+                            "binop": "==",
+                            "left": {
+                              "var": "a"
+                            },
+                            "right": {
+                              "array": [
+                                {
+                                  "const": 2
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "ST": "b"
+      },
+      {
+        "LD": "a"
+      },
+      "WRITE",
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 2
+      },
+      "SET",
+      {
+        "LD": "b"
+      },
+      "WRITE",
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "BINOP": "=="
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[2], [2], 1",
+      "error": ""
+    },
+    "sm": {
+      "output": "[2], [2], 1",
+      "error": ""
+    }
+  },
+  {
+    "name": "array_comparison",
+    "source": "{ write([9] < [1,2]); write([2] < [1]); write([1,2] == [1,2]); write([1,3] >= [1,2]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "<",
+            "left": {
+              "array": [
+                {
+                  "const": 9
+                }
+              ]
+            },
+            "right": {
+              "array": [
+                {
+                  "const": 1
+                },
+                {
+                  "const": 2
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "binop": "<",
+                "left": {
+                  "array": [
+                    {
+                      "const": 2
+                    }
+                  ]
+                },
+                "right": {
+                  "array": [
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "binop": "==",
+                    "left": {
+                      "array": [
+                        {
+                          "const": 1
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    },
+                    "right": {
+                      "array": [
+                        {
+                          "const": 1
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "binop": ">=",
+                    "left": {
+                      "array": [
+                        {
+                          "const": 1
+                        },
+                        {
+                          "const": 3
+                        }
+                      ]
+                    },
+                    "right": {
+                      "array": [
+                        {
+                          "const": 1
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 9
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "BINOP": "<"
+      },
+      "WRITE",
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "BINOP": "<"
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "BINOP": "=="
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 3
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "BINOP": ">="
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "1, 0, 1, 1",
+      "error": ""
+    },
+    "sm": {
+      "output": "1, 0, 1, 1",
+      "error": ""
+    }
+  },
+  {
+    "name": "strings",
+    "source": "{ s = \"ab\"; t = s; write(s); s[0] = 'X'; write(t); write(s[0]); write(s.length); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "s",
+            "src": {
+              "string": "ab"
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "assn": {
+                "dst": "t",
+                "src": {
+                  "var": "s"
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "s"
+                  }
+                },
+                "right": {
+                  "seq": {
+                    "left": {
+                      "set": {
+                        "dst": {
+                          "var": "s"
+                        },
+                        "idx": {
+                          "const": 0
+                        },
+                        "value": {
+                          "const": 88
+                        }
+                      }
+                    },
+                    "right": {
+                      "seq": {
+                        "left": {
+                          "write": {
+                            "var": "t"
+                          }
+                        },
+                        "right": {
+                          "seq": {
+                            "left": {
+                              "write": {
+                                "elem": {
+                                  "var": "s"
+                                },
+                                "index": {
+                                  "const": 0
+                                }
+                              }
+                            },
+                            "right": {
+                              "write": {
+                                "length": {
+                                  "var": "s"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "ab"
+      },
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      {
+        "ST": "t"
+      },
+      {
+        "LD": "s"
+      },
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 88
+      },
+      "SET",
+      {
+        "LD": "t"
+      },
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      "LENGTH",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"Xb\", \"Xb\", 88, 2",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"Xb\", \"Xb\", 88, 2",
+      "error": ""
+    }
+  },
+  {
+    "name": "string_comparison",
+    "source": "{ write(\"a\" < \"b\"); write(\"ab\" == \"ab\"); write(\"a\" != \"b\"); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "binop": "<",
+            "left": {
+              "string": "a"
+            },
+            "right": {
+              "string": "b"
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "binop": "==",
+                "left": {
+                  "string": "ab"
+                },
+                "right": {
+                  "string": "ab"
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "binop": "!=",
+                "left": {
+                  "string": "a"
+                },
+                "right": {
+                  "string": "b"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a"
+      },
+      {
+        "STRING": "b"
+      },
+      {
+        "BINOP": "<"
+      },
+      "WRITE",
+      {
+        "STRING": "ab"
+      },
+      {
+        "STRING": "ab"
+      },
+      {
+        "BINOP": "=="
+      },
+      "WRITE",
+      {
+        "STRING": "a"
+      },
+      {
+        "STRING": "b"
+      },
+      {
+        "BINOP": "!="
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "1, 1, 1",
+      "error": ""
+    },
+    "sm": {
+      "output": "1, 1, 1",
+      "error": ""
+    }
+  },
+  {
+    "name": "string_utf8",
+    "source": "{ write(\"аб\".length); write(\"аб\"[0]); write(\"аб\"); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "length": {
+              "string": "аб"
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "elem": {
+                  "string": "аб"
+                },
+                "index": {
+                  "const": 0
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "string": "аб"
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "аб"
+      },
+      "LENGTH",
+      "WRITE",
+      {
+        "STRING": "аб"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "STRING": "аб"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "4, 208, \"аб\"",
+      "error": ""
+    },
+    "sm": {
+      "output": "4, 208, \"аб\"",
+      "error": ""
+    }
+  },
+  {
+    "name": "string_raw_backslash",
+    "source": "{ write(\"a\\nb\"); write('\\n'); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "string": "a\\nb"
+          }
+        },
+        "right": {
+          "write": {
+            "const": 10
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a\\nb"
+      },
+      "WRITE",
+      {
+        "CONST": 10
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"a\\nb\", 10",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"a\\nb\", 10",
+      "error": ""
+    }
+  },
+  {
+    "name": "string_byte",
+    "source": "{ s = \"a\"; s[0] = 255; write(s); write(s[0]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "s",
+            "src": {
+              "string": "a"
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "set": {
+                "dst": {
+                  "var": "s"
+                },
+                "idx": {
+                  "const": 0
+                },
+                "value": {
+                  "const": 255
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "var": "s"
+                  }
+                },
+                "right": {
+                  "write": {
+                    "elem": {
+                      "var": "s"
+                    },
+                    "index": {
+                      "const": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a"
+      },
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 255
+      },
+      "SET",
+      {
+        "LD": "s"
+      },
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"�\", 255",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"�\", 255",
+      "error": ""
+    }
+  },
+  {
+    "name": "constructors",
+    "source": "{ write(Foo); write(Foo(1, \"x\")); write(Tree(Leaf(2), Leaf(3))); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "sexp": "Foo",
+            "args": []
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "sexp": "Foo",
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "string": "x"
+                  }
+                ]
+              }
+            },
+            "right": {
+              "write": {
+                "sexp": "Tree",
+                "args": [
+                  {
+                    "sexp": "Leaf",
+                    "args": [
+                      {
+                        "const": 2
+                      }
+                    ]
+                  },
+                  {
+                    "sexp": "Leaf",
+                    "args": [
+                      {
+                        "const": 3
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "SEXP": [
+          "Foo",
+          0
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "STRING": "x"
+      },
+      {
+        "SEXP": [
+          "Foo",
+          2
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "Leaf",
+          1
+        ]
+      },
+      {
+        "CONST": 3
+      },
+      {
+        "SEXP": [
+          "Leaf",
+          1
+        ]
+      },
+      {
+        "SEXP": [
+          "Tree",
+          2
+        ]
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "Foo, Foo (1, \"x\"), Tree (Leaf (2), Leaf (3))",
+      "error": ""
+    },
+    "sm": {
+      "output": "Foo, Foo (1, \"x\"), Tree (Leaf (2), Leaf (3))",
+      "error": ""
+    }
+  },
+  {
+    "name": "sexp_set",
+    "source": "{ x = Pair(1, 2); y = x; x[0] = 9; write(y); write(x.length); write(x[1]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "sexp": "Pair",
+              "args": [
+                {
+                  "const": 1
+                },
+                {
+                  "const": 2
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "assn": {
+                "dst": "y",
+                "src": {
+                  "var": "x"
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "set": {
+                    "dst": {
+                      "var": "x"
+                    },
+                    "idx": {
+                      "const": 0
+                    },
+                    "value": {
+                      "const": 9
+                    }
+                  }
+                },
+                "right": {
+                  "seq": {
+                    "left": {
+                      "write": {
+                        "var": "y"
+                      }
+                    },
+                    "right": {
+                      "seq": {
+                        "left": {
+                          "write": {
+                            "length": {
+                              "var": "x"
+                            }
+                          }
+                        },
+                        "right": {
+                          "write": {
+                            "elem": {
+                              "var": "x"
+                            },
+                            "index": {
+                              "const": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "Pair",
+          2
+        ]
+      },
+      {
+        "ST": "x"
+      },
+      {
+        "LD": "x"
+      },
+      {
+        "ST": "y"
+      },
+      {
+        "LD": "x"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 9
+      },
+      "SET",
+      {
+        "LD": "y"
+      },
+      "WRITE",
+      {
+        "LD": "x"
+      },
+      "LENGTH",
+      "WRITE",
+      {
+        "LD": "x"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "Pair (9, 2), 2, 2",
+      "error": ""
+    },
+    "sm": {
+      "output": "Pair (9, 2), 2, 2",
+      "error": ""
+    }
+  },
+  {
+    "name": "lists",
+    "source": "{ write({}); write({1,2}); write(1:2:{}); write((1:2:3:{}).length); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "sexp": "nil",
+            "args": []
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "sexp": "cons",
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "sexp": "cons",
+                    "args": [
+                      {
+                        "const": 2
+                      },
+                      {
+                        "sexp": "nil",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "sexp": "cons",
+                    "args": [
+                      {
+                        "const": 1
+                      },
+                      {
+                        "sexp": "cons",
+                        "args": [
+                          {
+                            "const": 2
+                          },
+                          {
+                            "sexp": "nil",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "right": {
+                  "write": {
+                    "length": {
+                      "sexp": "cons",
+                      "args": [
+                        {
+                          "const": 1
+                        },
+                        {
+                          "sexp": "cons",
+                          "args": [
+                            {
+                              "const": 2
+                            },
+                            {
+                              "sexp": "cons",
+                              "args": [
+                                {
+                                  "const": 3
+                                },
+                                {
+                                  "sexp": "nil",
+                                  "args": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "CONST": 3
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      "LENGTH",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "{}, {1, 2}, {1, 2}, 2",
+      "error": ""
+    },
+    "sm": {
+      "output": "{}, {1, 2}, {1, 2}, 2",
+      "error": ""
+    }
+  },
+  {
+    "name": "list_precedence",
+    "source": "{ write(1 + 2 : {}); write((1:2:{})[0]); write((1:2:{})[1]); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "sexp": "cons",
+            "args": [
+              {
+                "binop": "+",
+                "left": {
+                  "const": 1
+                },
+                "right": {
+                  "const": 2
+                }
+              },
+              {
+                "sexp": "nil",
+                "args": []
+              }
+            ]
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "elem": {
+                  "sexp": "cons",
+                  "args": [
+                    {
+                      "const": 1
+                    },
+                    {
+                      "sexp": "cons",
+                      "args": [
+                        {
+                          "const": 2
+                        },
+                        {
+                          "sexp": "nil",
+                          "args": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "index": {
+                  "const": 0
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "elem": {
+                  "sexp": "cons",
+                  "args": [
+                    {
+                      "const": 1
+                    },
+                    {
+                      "sexp": "cons",
+                      "args": [
+                        {
+                          "const": 2
+                        },
+                        {
+                          "sexp": "nil",
+                          "args": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "index": {
+                  "const": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "BINOP": "+"
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "{3}, 1, {2}",
+      "error": ""
+    },
+    "sm": {
+      "output": "{3}, 1, {2}",
+      "error": ""
+    }
+  },
+  {
+    "name": "list_mutation",
+    "source": "{ a = {1,2}; b = a; b[1][0] = 8; write(a); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "sexp": "cons",
+              "args": [
+                {
+                  "const": 1
+                },
+                {
+                  "sexp": "cons",
+                  "args": [
+                    {
+                      "const": 2
+                    },
+                    {
+                      "sexp": "nil",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "assn": {
+                "dst": "b",
+                "src": {
+                  "var": "a"
+                }
+              }
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "set": {
+                    "dst": {
+                      "elem": {
+                        "var": "b"
+                      },
+                      "index": {
+                        "const": 1
+                      }
+                    },
+                    "idx": {
+                      "const": 0
+                    },
+                    "value": {
+                      "const": 8
+                    }
+                  }
+                },
+                "right": {
+                  "write": {
+                    "var": "a"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "SEXP": [
+          "nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "SEXP": [
+          "cons",
+          2
+        ]
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "ST": "b"
+      },
+      {
+        "LD": "b"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 8
+      },
+      "SET",
+      {
+        "LD": "a"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "{1, 8}",
+      "error": ""
+    },
+    "sm": {
+      "output": "{1, 8}",
+      "error": ""
+    }
+  },
+  {
+    "name": "walk_list",
+    "source": "{ read(xs); while (xs.length) { write(xs[0]); xs = xs[1]; } }",
+    "input": "{10,20,30}",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "xs"
+        },
+        "right": {
+          "while": {
+            "cond": {
+              "length": {
+                "var": "xs"
+              }
+            },
+            "body": {
+              "seq": {
+                "left": {
+                  "write": {
+                    "elem": {
+                      "var": "xs"
+                    },
+                    "index": {
+                      "const": 0
+                    }
+                  }
+                },
+                "right": {
+                  "assn": {
+                    "dst": "xs",
+                    "src": {
+                      "elem": {
+                        "var": "xs"
+                      },
+                      "index": {
+                        "const": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      "READ",
+      {
+        "ST": "xs"
+      },
+      {
+        "JMP": "L_while_cond_3"
+      },
+      {
+        "LABEL": "L_while_cody_2"
+      },
+      {
+        "LD": "xs"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "LD": "xs"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      {
+        "ST": "xs"
+      },
+      {
+        "LABEL": "L_while_cond_3"
+      },
+      {
+        "LD": "xs"
+      },
+      "LENGTH",
+      {
+        "JNZ": "L_while_cody_2"
+      }
+    ],
+    "eval": {
+      "output": "10, 20, 30",
+      "error": ""
+    },
+    "sm": {
+      "output": "10, 20, 30",
+      "error": ""
+    }
+  },
+  {
+    "name": "input_values",
+    "source": "{ read(a); read(s); read(t); read(n); write(a); write(s); write(t); write(n); }",
+    "input": "[1,2], \"hi\", Pair(3,4), -5",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "a"
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "read": "s"
+            },
+            "right": {
+              "seq": {
+                "left": {
+                  "read": "t"
+                },
+                "right": {
+                  "seq": {
+                    "left": {
+                      "read": "n"
+                    },
+                    "right": {
+                      "seq": {
+                        "left": {
+                          "write": {
+                            "var": "a"
+                          }
+                        },
+                        "right": {
+                          "seq": {
+                            "left": {
+                              "write": {
+                                "var": "s"
+                              }
+                            },
+                            "right": {
+                              "seq": {
+                                "left": {
+                                  "write": {
+                                    "var": "t"
+                                  }
+                                },
+                                "right": {
+                                  "write": {
+                                    "var": "n"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      "READ",
+      {
+        "ST": "a"
+      },
+      "READ",
+      {
+        "ST": "s"
+      },
+      "READ",
+      {
+        "ST": "t"
+      },
+      "READ",
+      {
+        "ST": "n"
+      },
+      {
+        "LD": "a"
+      },
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      "WRITE",
+      {
+        "LD": "t"
+      },
+      "WRITE",
+      {
+        "LD": "n"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[1, 2], \"hi\", Pair (3, 4), -5",
+      "error": ""
+    },
+    "sm": {
+      "output": "[1, 2], \"hi\", Pair (3, 4), -5",
+      "error": ""
+    }
+  },
+  {
+    "name": "for_array",
+    "source": "{ a = [0,0,0]; for(i = 0; i < a.length; i += 1) a[i] = i * i; write(a); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "array": [
+                {
+                  "const": 0
+                },
+                {
+                  "const": 0
+                },
+                {
+                  "const": 0
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "seq": {
+                "left": {
+                  "assn": {
+                    "dst": "i",
+                    "src": {
+                      "const": 0
+                    }
+                  }
+                },
+                "right": {
+                  "while": {
+                    "cond": {
+                      "binop": "<",
+                      "left": {
+                        "var": "i"
+                      },
+                      "right": {
+                        "length": {
+                          "var": "a"
+                        }
+                      }
+                    },
+                    "body": {
+                      "seq": {
+                        "left": {
+                          "set": {
+                            "dst": {
+                              "var": "a"
+                            },
+                            "idx": {
+                              "var": "i"
+                            },
+                            "value": {
+                              "binop": "*",
+                              "left": {
+                                "var": "i"
+                              },
+                              "right": {
+                                "var": "i"
+                              }
+                            }
+                          }
+                        },
+                        "right": {
+                          "assn": {
+                            "dst": "i",
+                            "src": {
+                              "binop": "+",
+                              "left": {
+                                "var": "i"
+                              },
+                              "right": {
+                                "const": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "var": "a"
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "ARRAY": 3
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "ST": "i"
+      },
+      {
+        "JMP": "L_while_cond_5"
+      },
+      {
+        "LABEL": "L_while_cody_4"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "i"
+      },
+      {
+        "LD": "i"
+      },
+      {
+        "LD": "i"
+      },
+      {
+        "BINOP": "*"
+      },
+      "SET",
+      {
+        "LD": "i"
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "BINOP": "+"
+      },
+      {
+        "ST": "i"
+      },
+      {
+        "LABEL": "L_while_cond_5"
+      },
+      {
+        "LD": "i"
+      },
+      {
+        "LD": "a"
+      },
+      "LENGTH",
+      {
+        "BINOP": "<"
+      },
+      {
+        "JNZ": "L_while_cody_4"
+      },
+      {
+        "LD": "a"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[0, 1, 4]",
+      "error": ""
+    },
+    "sm": {
+      "output": "[0, 1, 4]",
+      "error": ""
+    }
+  },
+  {
+    "name": "do_array",
+    "source": "{ a = [3]; do { a[0] -= 1; } while(a[0]); write(a); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "a",
+            "src": {
+              "array": [
+                {
+                  "const": 3
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "do": {
+                "body": {
+                  "set": {
+                    "dst": {
+                      "var": "a"
+                    },
+                    "idx": {
+                      "const": 0
+                    },
+                    "value": {
+                      "binop": "-",
+                      "left": {
+                        "elem": {
+                          "var": "a"
+                        },
+                        "index": {
+                          "const": 0
+                        }
+                      },
+                      "right": {
+                        "const": 1
+                      }
+                    }
+                  }
+                },
+                "cond": {
+                  "elem": {
+                    "var": "a"
+                  },
+                  "index": {
+                    "const": 0
+                  }
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "var": "a"
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 3
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "ST": "a"
+      },
+      {
+        "LABEL": "L_while_cody_3"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      {
+        "CONST": 1
+      },
+      {
+        "BINOP": "-"
+      },
+      "SET",
+      {
+        "LABEL": "L_while_cond_4"
+      },
+      {
+        "LD": "a"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      {
+        "JNZ": "L_while_cody_3"
+      },
+      {
+        "LD": "a"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "[0]",
+      "error": ""
+    },
+    "sm": {
+      "output": "[0]",
+      "error": ""
+    }
+  },
+  {
+    "name": "branches",
+    "source": "{ x = [7]; if (x[0] == 0) write(0); elif(x.length == 1) write(x[0]); else write(9); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x",
+            "src": {
+              "array": [
+                {
+                  "const": 7
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "if": {
+            "cond": {
+              "binop": "==",
+              "left": {
+                "elem": {
+                  "var": "x"
+                },
+                "index": {
+                  "const": 0
+                }
+              },
+              "right": {
+                "const": 0
+              }
+            },
+            "then": {
+              "write": {
+                "const": 0
+              }
+            },
+            "else": {
+              "if": {
+                "cond": {
+                  "binop": "==",
+                  "left": {
+                    "length": {
+                      "var": "x"
+                    }
+                  },
+                  "right": {
+                    "const": 1
+                  }
+                },
+                "then": {
+                  "write": {
+                    "elem": {
+                      "var": "x"
+                    },
+                    "index": {
+                      "const": 0
+                    }
+                  }
+                },
+                "else": {
+                  "write": {
+                    "const": 9
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 7
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "ST": "x"
+      },
+      {
+        "LD": "x"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      {
+        "CONST": 0
+      },
+      {
+        "BINOP": "=="
+      },
+      {
+        "JZ": "L_else_2"
+      },
+      {
+        "CONST": 0
+      },
+      "WRITE",
+      {
+        "JMP": "L_end_0"
+      },
+      {
+        "LABEL": "L_else_2"
+      },
+      {
+        "LD": "x"
+      },
+      "LENGTH",
+      {
+        "CONST": 1
+      },
+      {
+        "BINOP": "=="
+      },
+      {
+        "JZ": "L_else_3"
+      },
+      {
+        "LD": "x"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "JMP": "L_end_0"
+      },
+      {
+        "LABEL": "L_else_3"
+      },
+      {
+        "CONST": 9
+      },
+      "WRITE",
+      {
+        "LABEL": "L_end_0"
+      }
+    ],
+    "eval": {
+      "output": "7",
+      "error": ""
+    },
+    "sm": {
+      "output": "7",
+      "error": ""
+    }
+  },
+  {
+    "name": "comments_identifiers",
+    "source": "{ -- comment\n x_1 = ['a', '\\t']; (* block *) write(x_1[0]) write(x_1[1]) }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "x_1",
+            "src": {
+              "array": [
+                {
+                  "const": 97
+                },
+                {
+                  "const": 9
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "elem": {
+                  "var": "x_1"
+                },
+                "index": {
+                  "const": 0
+                }
+              }
+            },
+            "right": {
+              "write": {
+                "elem": {
+                  "var": "x_1"
+                },
+                "index": {
+                  "const": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 97
+      },
+      {
+        "CONST": 9
+      },
+      {
+        "ARRAY": 2
+      },
+      {
+        "ST": "x_1"
+      },
+      {
+        "LD": "x_1"
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE",
+      {
+        "LD": "x_1"
+      },
+      {
+        "CONST": 1
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "97, 9",
+      "error": ""
+    },
+    "sm": {
+      "output": "97, 9",
+      "error": ""
+    }
+  },
+  {
+    "name": "empty_string",
+    "source": "{ s = \"\"; write(s); write(s.length); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "s",
+            "src": {
+              "string": ""
+            }
+          }
+        },
+        "right": {
+          "seq": {
+            "left": {
+              "write": {
+                "var": "s"
+              }
+            },
+            "right": {
+              "write": {
+                "length": {
+                  "var": "s"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": ""
+      },
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      "WRITE",
+      {
+        "LD": "s"
+      },
+      "LENGTH",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"\", 0",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"\", 0",
+      "error": ""
+    }
+  },
+  {
+    "name": "array_bound",
+    "source": "{ write([1][2]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "array": [
+            {
+              "const": 1
+            }
+          ]
+        },
+        "index": {
+          "const": 2
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": 2
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: index 2 is out of bounds [0, 1)"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: index 2 is out of bounds [0, 1)"
+    }
+  },
+  {
+    "name": "negative_index",
+    "source": "{ write([1][-1]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "array": [
+            {
+              "const": 1
+            }
+          ]
+        },
+        "index": {
+          "const": -1
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": -1
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: index -1 is out of bounds [0, 1)"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: index -1 is out of bounds [0, 1)"
+    }
+  },
+  {
+    "name": "sexp_bound",
+    "source": "{ write(Foo[0]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "sexp": "Foo",
+          "args": []
+        },
+        "index": {
+          "const": 0
+        }
+      }
+    },
+    "code": [
+      {
+        "SEXP": [
+          "Foo",
+          0
+        ]
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: index 0 is out of bounds [0, 0)"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: index 0 is out of bounds [0, 0)"
+    }
+  },
+  {
+    "name": "string_bound",
+    "source": "{ write(\"ab\"[2]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "string": "ab"
+        },
+        "index": {
+          "const": 2
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "ab"
+      },
+      {
+        "CONST": 2
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: index 2 is out of bounds [0, 2)"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: index 2 is out of bounds [0, 2)"
+    }
+  },
+  {
+    "name": "index_type",
+    "source": "{ write([1][\"x\"]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "array": [
+            {
+              "const": 1
+            }
+          ]
+        },
+        "index": {
+          "string": "x"
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "STRING": "x"
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"x\"\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"x\"\" given"
+    }
+  },
+  {
+    "name": "length_type",
+    "source": "{ write(1.length); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "length": {
+          "const": 1
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      "LENGTH",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: array/string/sexp value expected but \"1\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: array/string/sexp value expected but \"1\" given"
+    }
+  },
+  {
+    "name": "element_type",
+    "source": "{ write(1[0]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "const": 1
+        },
+        "index": {
+          "const": 0
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 0
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: array/string value expected but \"1\" is given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: array/string value expected but \"1\" is given"
+    }
+  },
+  {
+    "name": "condition_type",
+    "source": "{ if (\"x\") write(1); else write(2); }",
+    "input": "0",
+    "ast": {
+      "if": {
+        "cond": {
+          "string": "x"
+        },
+        "then": {
+          "write": {
+            "const": 1
+          }
+        },
+        "else": {
+          "write": {
+            "const": 2
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "x"
+      },
+      {
+        "JZ": "L_else_1"
+      },
+      {
+        "CONST": 1
+      },
+      "WRITE",
+      {
+        "JMP": "L_end_0"
+      },
+      {
+        "LABEL": "L_else_1"
+      },
+      {
+        "CONST": 2
+      },
+      "WRITE",
+      {
+        "LABEL": "L_end_0"
+      }
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"x\"\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"x\"\" given"
+    }
+  },
+  {
+    "name": "array_add_error",
+    "source": "{ write([1] + [2]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "+",
+        "left": {
+          "array": [
+            {
+              "const": 1
+            }
+          ]
+        },
+        "right": {
+          "array": [
+            {
+              "const": 2
+            }
+          ]
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "CONST": 2
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "BINOP": "+"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"[2]\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"[2]\" given"
+    }
+  },
+  {
+    "name": "string_add_error",
+    "source": "{ write(\"a\" + \"b\"); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "+",
+        "left": {
+          "string": "a"
+        },
+        "right": {
+          "string": "b"
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a"
+      },
+      {
+        "STRING": "b"
+      },
+      {
+        "BINOP": "+"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"b\"\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"b\"\" given"
+    }
+  },
+  {
+    "name": "mixed_comparison",
+    "source": "{ write(1 == [1]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "==",
+        "left": {
+          "const": 1
+        },
+        "right": {
+          "array": [
+            {
+              "const": 1
+            }
+          ]
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 1
+      },
+      {
+        "ARRAY": 1
+      },
+      {
+        "BINOP": "=="
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: binary operator \"=\" is applied to 1 and [1]"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: binary operator \"=\" is applied to 1 and [1]"
+    }
+  },
+  {
+    "name": "sexp_comparison",
+    "source": "{ write(Nil == Nil); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "==",
+        "left": {
+          "sexp": "Nil",
+          "args": []
+        },
+        "right": {
+          "sexp": "Nil",
+          "args": []
+        }
+      }
+    },
+    "code": [
+      {
+        "SEXP": [
+          "Nil",
+          0
+        ]
+      },
+      {
+        "SEXP": [
+          "Nil",
+          0
+        ]
+      },
+      {
+        "BINOP": "=="
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: binary operator \"=\" is applied to Nil and Nil"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: binary operator \"=\" is applied to Nil and Nil"
+    }
+  },
+  {
+    "name": "string_set_range",
+    "source": "{ s = \"a\"; s[0] = 256; }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "s",
+            "src": {
+              "string": "a"
+            }
+          }
+        },
+        "right": {
+          "set": {
+            "dst": {
+              "var": "s"
+            },
+            "idx": {
+              "const": 0
+            },
+            "value": {
+              "const": 256
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a"
+      },
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 256
+      },
+      "SET"
+    ],
+    "eval": {
+      "output": "",
+      "error": "Invalid_argument(\"Char.chr\")"
+    },
+    "sm": {
+      "output": "",
+      "error": "Invalid_argument(\"Char.chr\")"
+    }
+  },
+  {
+    "name": "string_set_type",
+    "source": "{ s = \"a\"; s[0] = \"b\"; }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "assn": {
+            "dst": "s",
+            "src": {
+              "string": "a"
+            }
+          }
+        },
+        "right": {
+          "set": {
+            "dst": {
+              "var": "s"
+            },
+            "idx": {
+              "const": 0
+            },
+            "value": {
+              "string": "b"
+            }
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a"
+      },
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "STRING": "b"
+      },
+      "SET"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"b\"\" given"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: integer value expected but \"\"b\"\" given"
+    }
+  },
+  {
+    "name": "eager_and",
+    "source": "{ write(0 && (10 / 0)); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "&&",
+        "left": {
+          "const": 0
+        },
+        "right": {
+          "binop": "/",
+          "left": {
+            "const": 10
+          },
+          "right": {
+            "const": 0
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 0
+      },
+      {
+        "CONST": 10
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "BINOP": "/"
+      },
+      {
+        "BINOP": "&&"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "Division_by_zero"
+    },
+    "sm": {
+      "output": "",
+      "error": "Division_by_zero"
+    }
+  },
+  {
+    "name": "eager_or",
+    "source": "{ write(1 !! (10 / 0)); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "!!",
+        "left": {
+          "const": 1
+        },
+        "right": {
+          "binop": "/",
+          "left": {
+            "const": 10
+          },
+          "right": {
+            "const": 0
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "CONST": 1
+      },
+      {
+        "CONST": 10
+      },
+      {
+        "CONST": 0
+      },
+      {
+        "BINOP": "/"
+      },
+      {
+        "BINOP": "!!"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "Division_by_zero"
+    },
+    "sm": {
+      "output": "",
+      "error": "Division_by_zero"
+    }
+  },
+  {
+    "name": "missing",
+    "source": "{ write(missing); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "var": "missing"
+      }
+    },
+    "code": [
+      {
+        "LD": "missing"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"missing\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"missing\" is undefined"
+    }
+  },
+  {
+    "name": "no_input",
+    "source": "{ read(x); read(y); }",
+    "input": "1",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "x"
+        },
+        "right": {
+          "read": "y"
+        }
+      }
+    },
+    "code": [
+      "READ",
+      {
+        "ST": "x"
+      },
+      "READ",
+      {
+        "ST": "y"
+      }
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: input exhausted"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: input exhausted"
+    }
+  },
+  {
+    "name": "binary_error_order",
+    "source": "{ write(a + b); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "binop": "+",
+        "left": {
+          "var": "a"
+        },
+        "right": {
+          "var": "b"
+        }
+      }
+    },
+    "code": [
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "b"
+      },
+      {
+        "BINOP": "+"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"b\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    }
+  },
+  {
+    "name": "set_error_order",
+    "source": "{ a[missing] = other; }",
+    "input": "0",
+    "ast": {
+      "set": {
+        "dst": {
+          "var": "a"
+        },
+        "idx": {
+          "var": "missing"
+        },
+        "value": {
+          "var": "other"
+        }
+      }
+    },
+    "code": [
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "missing"
+      },
+      {
+        "LD": "other"
+      },
+      "SET"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"other\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    }
+  },
+  {
+    "name": "element_error_order",
+    "source": "{ write(a[missing]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "elem": {
+          "var": "a"
+        },
+        "index": {
+          "var": "missing"
+        }
+      }
+    },
+    "code": [
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "missing"
+      },
+      "ELEM",
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"missing\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    }
+  },
+  {
+    "name": "array_error_order",
+    "source": "{ write([a,b]); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "array": [
+          {
+            "var": "a"
+          },
+          {
+            "var": "b"
+          }
+        ]
+      }
+    },
+    "code": [
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "b"
+      },
+      {
+        "ARRAY": 2
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    }
+  },
+  {
+    "name": "sexp_error_order",
+    "source": "{ write(Foo(a,b)); }",
+    "input": "0",
+    "ast": {
+      "write": {
+        "sexp": "Foo",
+        "args": [
+          {
+            "var": "a"
+          },
+          {
+            "var": "b"
+          }
+        ]
+      }
+    },
+    "code": [
+      {
+        "LD": "a"
+      },
+      {
+        "LD": "b"
+      },
+      {
+        "SEXP": [
+          "Foo",
+          2
+        ]
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    },
+    "sm": {
+      "output": "",
+      "error": "ERROR: variable \"a\" is undefined"
+    }
+  },
+  {
+    "name": "quote_escaping",
+    "source": "{ write(\"a\"\"b\"); write(''''); }",
+    "input": "0",
+    "ast": {
+      "seq": {
+        "left": {
+          "write": {
+            "string": "a\"b"
+          }
+        },
+        "right": {
+          "write": {
+            "const": 39
+          }
+        }
+      }
+    },
+    "code": [
+      {
+        "STRING": "a\"b"
+      },
+      "WRITE",
+      {
+        "CONST": 39
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"a\"b\", 39",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"a\"b\", 39",
+      "error": ""
+    }
+  },
+  {
+    "name": "quoted_input",
+    "source": "{ read(s); write(s); }",
+    "input": "\"a\"\"b\"",
+    "ast": {
+      "seq": {
+        "left": {
+          "read": "s"
+        },
+        "right": {
+          "write": {
+            "var": "s"
+          }
+        }
+      }
+    },
+    "code": [
+      "READ",
+      {
+        "ST": "s"
+      },
+      {
+        "LD": "s"
+      },
+      "WRITE"
+    ],
+    "eval": {
+      "output": "\"a\"b\"",
+      "error": ""
+    },
+    "sm": {
+      "output": "\"a\"b\"",
+      "error": ""
+    }
+  }
+]

@@ -23,6 +23,24 @@ class Compiler:
             raise ValueError("Выражение должно быть JSON-объектом")
         if set(node) == {"const"} and type(node["const"]) is int:
             self.emit("CONST", node["const"])
+        elif set(node) == {"string"} and isinstance(node["string"], str):
+            self.emit("STRING", node["string"])
+        elif set(node) == {"array"} and isinstance(node["array"], list):
+            for item in node["array"]:
+                self.expression(item)
+            self.emit("ARRAY", len(node["array"]))
+        elif (set(node) == {"sexp", "args"} and isinstance(node["sexp"], str)
+              and isinstance(node["args"], list)):
+            for item in node["args"]:
+                self.expression(item)
+            self.emit("SEXP", [node["sexp"], len(node["args"])])
+        elif set(node) == {"length"}:
+            self.expression(node["length"])
+            self.emit("LENGTH")
+        elif set(node) == {"elem", "index"}:
+            self.expression(node["elem"])
+            self.expression(node["index"])
+            self.emit("ELEM")
         elif set(node) == {"var"} and isinstance(node["var"], str):
             self.emit("LD", node["var"])
         elif set(node) == {"binop", "left", "right"} and isinstance(node["binop"], str):
@@ -47,6 +65,11 @@ class Compiler:
         elif opcode == "read" and isinstance(value, str):
             self.emit("READ")
             self.emit("ST", value)
+        elif opcode == "set":
+            self.expression(value["dst"])
+            self.expression(value["idx"])
+            self.expression(value["value"])
+            self.emit("SET")
         elif opcode == "write":
             self.expression(value)
             self.emit("WRITE")
