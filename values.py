@@ -1,9 +1,3 @@
-"""Общие значения шестой лабы: int, bytearray, list и Sexp.
-
-Строки — изменяемые байты UTF-8, массивы и поля Sexp хранят ссылки.
-Модуль используется и интерпретатором AST, и стековой машиной.
-"""
-
 import json
 
 
@@ -16,7 +10,6 @@ class Sexp:
 
 
 def normalize_inputs(inputs):
-    """Переводит входные строки в байты; сохраняет общие ссылки внутри входа."""
     memo = {}
 
     def convert(value):
@@ -116,17 +109,32 @@ def set_element(container, index, value):
     (container.args if isinstance(container, Sexp) else container)[index] = value
 
 
-def compare(op, left, right):
+def compare(op, left, right, active=None):
     if type(left) is int and type(right) is int:
         return (left > right) - (left < right)
     if isinstance(left, bytearray) and isinstance(right, bytearray):
         return (left > right) - (left < right)
+    if active is None:
+        active = set()
+    pair = (id(left), id(right))
+    if pair in active:
+        raise RuntimeError("Stack overflow")
+    active = active | {pair}
     if isinstance(left, list) and isinstance(right, list):
-        # В эталоне сначала сравнивается длина, затем соответствующие элементы.
         if len(left) != len(right):
             return (len(left) > len(right)) - (len(left) < len(right))
         for a, b in zip(left, right):
-            result = compare(op, a, b)
+            result = compare(op, a, b, active)
+            if result:
+                return result
+        return 0
+    if isinstance(left, Sexp) and isinstance(right, Sexp):
+        if left.tag != right.tag:
+            return (left.tag > right.tag) - (left.tag < right.tag)
+        if len(left.args) != len(right.args):
+            return (len(left.args) > len(right.args)) - (len(left.args) < len(right.args))
+        for a, b in zip(left.args, right.args):
+            result = compare(op, a, b, active)
             if result:
                 return result
         return 0
@@ -144,7 +152,6 @@ def binary(op, left, right):
                     "<=": result <= 0, ">": result > 0, ">=": result >= 0}[op])
     if op not in ("+", "-", "*", "/", "%", "&&", "!!"):
         raise ValueError(f"Неизвестная бинарная операция: {op}")
-    # Оба выражения уже вычислены; проверка чисел идёт справа налево, как в L0.
     right, left = number(right), number(left)
     if op == "+":
         return left + right
@@ -165,7 +172,6 @@ def binary(op, left, right):
 
 
 def reference_error(error):
-    """Сохраняем старый API ошибок, но lab6 CLI показывает сообщения сайта."""
     message = str(error)
     if message == "L0.Stmt.No_input":
         return "ERROR: input exhausted"

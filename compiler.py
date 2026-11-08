@@ -1,5 +1,3 @@
-"""Компилятор JSON-AST из лабораторной №1 в код стековой машины."""
-
 import argparse
 import json
 import sys
@@ -84,6 +82,22 @@ class Compiler:
                 self.emit("JMP", done)
                 self.emit("LABEL", otherwise)
                 self.statement(value["else"])
+            self.emit("LABEL", done)
+        elif opcode == "switch":
+            done = self.new_label()
+            temporary = "\0switch_" + done
+            self.expression(value["scrutinee"])
+            self.emit("ST", temporary)
+            for branch in value["branches"]:
+                next_branch = self.new_label()
+                self.emit("LD", temporary)
+                self.emit("MATCH", [branch["pattern"], next_branch])
+                self.statement(branch["branch"])
+                self.emit("UNBIND")
+                self.emit("JMP", done)
+                self.emit("LABEL", next_branch)
+            self.emit("LD", temporary)
+            self.emit("FAILMATCH")
             self.emit("LABEL", done)
         elif opcode == "while":
             start, done = self.new_label(), self.new_label()

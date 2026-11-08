@@ -3,6 +3,7 @@ import json
 import sys
 
 import values as runtime
+import patterns
 from source_parser import parse_values
 
 
@@ -12,7 +13,6 @@ input_position = 0
 output = []
 
 
-# Публичное имя сохранено для предыдущих лабораторных.
 apply_binop = runtime.binary
 
 def eval_expr(node):
@@ -47,8 +47,6 @@ def eval_expr(node):
             raise RuntimeError(f"L0.State.Undefined_variable({json.dumps(name)})")
         return variables[name]
     if set(node) == {"binop", "left", "right"}:
-        # eval.html вычисляет справа налево; sm.html — слева направо.
-        # Оба операнда обязательны, в том числе для && и !!.
         right = eval_expr(node["right"])
         left = eval_expr(node["left"])
         return apply_binop(node["binop"], left, right)
@@ -92,6 +90,26 @@ def execute(node):
             execute(branch["then"])
         else:
             execute(branch["else"])
+    elif "switch" in node:
+        switch = node["switch"]
+        value = eval_expr(switch["scrutinee"])
+        for branch in switch["branches"]:
+            bindings = patterns.match(branch["pattern"], value)
+            if bindings is None:
+                continue
+            missing = object()
+            previous = {name: variables.get(name, missing) for name in bindings}
+            variables.update(bindings)
+            try:
+                execute(branch["branch"])
+            finally:
+                for name, old in previous.items():
+                    if old is missing:
+                        variables.pop(name, None)
+                    else:
+                        variables[name] = old
+            return
+        raise RuntimeError(f"match failure on {runtime.format_value(value)}")
     elif "while" in node:
         loop = node["while"]
         while runtime.number(eval_expr(loop["cond"])) != 0:

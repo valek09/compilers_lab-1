@@ -1,25 +1,18 @@
-"""Стековая виртуальная машина для языка инструкций лабораторной работы №2.
-
-Программа задаётся JSON-массивом. Инструкции без операнда записываются строкой
-(`"READ"`, `"WRITE"`), а с операндом — объектом с одним ключом
-(`{"CONST": 10}`).
-"""
-
 import argparse
 import json
 import sys
 
 import values as runtime
+import patterns
 from source_parser import parse_machine, parse_values
 
 
 ARGUMENT_INSTRUCTIONS = {"LD", "ST", "CONST", "BINOP", "LABEL", "JMP", "JZ", "JNZ",
-                         "ARRAY", "STRING", "SEXP"}
-NO_ARGUMENT_INSTRUCTIONS = {"READ", "WRITE", "LENGTH", "ELEM", "SET"}
+                         "ARRAY", "STRING", "SEXP", "MATCH"}
+NO_ARGUMENT_INSTRUCTIONS = {"READ", "WRITE", "LENGTH", "ELEM", "SET", "UNBIND", "FAILMATCH"}
 
 
 def decode_program(program):
-    """Возвращает исполняемые инструкции и адреса меток (без самих LABEL)."""
     if not isinstance(program, list):
         raise ValueError("Программа должна быть JSON-массивом")
 
@@ -45,6 +38,10 @@ def decode_program(program):
                         or not isinstance(operand[0], str) or type(operand[1]) is not int
                         or operand[1] < 0):
                     raise ValueError("SEXP требует [строковый тег, неотрицательное число полей]")
+            elif opcode == "MATCH":
+                if (not isinstance(operand, list) or len(operand) != 2
+                        or not isinstance(operand[1], str)):
+                    raise ValueError("MATCH требует [образец, метка неуспеха]")
             elif opcode not in ("CONST", "ARRAY") and not isinstance(operand, str):
                 raise ValueError(f"Операнд {opcode} должен быть строкой")
         else:
@@ -52,15 +49,14 @@ def decode_program(program):
         if opcode == "LABEL":
             if operand in labels:
                 raise ValueError(f"Повторная метка: {operand}")
-            # Метка указывает на следующую команду и не требует шага VM.
-            # Несколько меток подряд могут обозначать один и тот же адрес.
             labels[operand] = len(instructions)
         else:
             instructions.append((opcode, operand))
 
     for opcode, operand in instructions:
-        if opcode in {"JMP", "JZ", "JNZ"} and operand not in labels:
-            raise ValueError(f"Неизвестная метка: {operand}")
+        target = operand[1] if opcode == "MATCH" else operand
+        if opcode in {"JMP", "JZ", "JNZ", "MATCH"} and target not in labels:
+            raise ValueError(f"Неизвестная метка: {target}")
     return instructions, labels
 
 
@@ -69,7 +65,7 @@ def run(program, values=(), *, stats=None):
     if stats is not None:
         stats["steps"] = 0
     instructions, labels = decode_program(program)
-    variables, stack, output = {}, [], []
+    variables, stack, output, scopes = {}, [], [], []
     input_values, input_position, pc = runtime.normalize_inputs(values), 0, 0
 
     def pop():
@@ -124,6 +120,27 @@ def run(program, values=(), *, stats=None):
         elif opcode == "BINOP":
             right, left = pop(), pop()
             stack.append(runtime.binary(operand, left, right))
+        elif opcode == "MATCH":
+            pattern, failed = operand
+            bindings = patterns.match(pattern, pop())
+            if bindings is None:
+                pc = labels[failed]
+            else:
+                missing = object()
+                previous = {name: variables.get(name, missing) for name in bindings}
+                scopes.append((missing, previous))
+                variables.update(bindings)
+        elif opcode == "UNBIND":
+            if not scopes:
+                raise RuntimeError("Stack_underflow")
+            missing, previous = scopes.pop()
+            for name, old in previous.items():
+                if old is missing:
+                    variables.pop(name, None)
+                else:
+                    variables[name] = old
+        elif opcode == "FAILMATCH":
+            raise RuntimeError(f"match failure on {runtime.format_value(pop())}")
         elif opcode == "JMP":
             pc = labels[operand]
         elif opcode == "JZ":

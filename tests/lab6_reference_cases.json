@@ -3027,12 +3027,12 @@
       "WRITE"
     ],
     "eval": {
-      "output": "",
-      "error": "ERROR: binary operator \"=\" is applied to Nil and Nil"
+      "output": "1",
+      "error": ""
     },
     "sm": {
-      "output": "",
-      "error": "ERROR: binary operator \"=\" is applied to Nil and Nil"
+      "output": "1",
+      "error": ""
     }
   },
   {

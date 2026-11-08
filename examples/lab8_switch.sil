@@ -1,0 +1,13 @@
+{
+  x = 1;
+  payload = Pair([1, 2], 9);
+  switch (payload) {
+    case Pair(items @ [first, second], _) ->
+      items[0] = 7;
+      write(first);
+      write(items[0])
+  | case _ -> write(0)
+  }
+  write(payload[0][0]);
+  write(x);
+}

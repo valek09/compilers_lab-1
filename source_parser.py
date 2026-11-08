@@ -1,9 +1,3 @@
-"""Текст шестой лабы → JSON-AST; литералы входа и текст команд SM.
-
-Рекурсивный спуск для операторов и разбор выражений по приоритетам.
-for, elif, составные присваивания, списки и символы раскрываются в AST.
-"""
-
 import ast
 import re
 
@@ -13,7 +7,7 @@ from values import Sexp
 TOKEN = re.compile(
     r'"(?:[^"]|"")*"|'
     r"''''|'(?:\\.|[^'\\])'|"
-    r"[A-Za-z][A-Za-z_0-9']*|[0-9]+|==|!=|<=|>=|&&|!!|[+*/%<>=;:(),{}\[\].-]"
+    r"[A-Za-z][A-Za-z_0-9']*|[0-9]+|->|==|!=|<=|>=|&&|!!|[+*/%<>=;:(),{}\[\].@#_|-]"
 )
 IDENT = re.compile(r"[a-z][a-zA-Z_0-9']*\Z")
 PRECEDENCE = {"!!": 1, "&&": 2, "==": 3, "!=": 3, "<": 3, "<=": 3,
@@ -96,6 +90,59 @@ class Parser:
             self.expect(closing)
         return args
 
+    def pattern_arguments(self, closing):
+        args = []
+        if not self.accept(closing):
+            args.append(self.pattern())
+            while self.accept(","):
+                args.append(self.pattern())
+            self.expect(closing)
+        return args
+
+    def pattern(self):
+        token = self.take()
+        if token == "_":
+            left = {"wildcard": []}
+        elif token == "[":
+            left = {"array": self.pattern_arguments("]")}
+        elif token == "{":
+            items = self.pattern_arguments("}")
+            left = {"sexp": "nil", "args": []}
+            for item in reversed(items):
+                left = {"sexp": "cons", "args": [item, left]}
+        elif token == "(":
+            left = self.pattern()
+            self.expect(")")
+        elif token == "#":
+            kind = self.take()
+            if kind not in ("array", "int", "string", "sexp"):
+                raise SyntaxError("Неизвестный тип образца")
+            left = "#" + kind
+        elif token.startswith('"'):
+            left = token[1:-1].replace('""', '"')
+        elif token.startswith("'"):
+            try:
+                char = "'" if token == "''''" else ast.literal_eval(token)
+            except (SyntaxError, ValueError) as error:
+                raise SyntaxError("Некорректный символьный образец") from error
+            if len(char) != 1 or ord(char) > 255:
+                raise SyntaxError("CHAR должен задавать один байт")
+            left = ord(char)
+        elif token.isdigit():
+            left = int(token)
+        elif token == "-" and self.peek().isdigit():
+            left = -int(self.take())
+        elif token[0].isupper() and token.isascii():
+            left = {"sexp": token, "args": self.pattern_arguments(")") if self.accept("(") else []}
+        elif IDENT.fullmatch(token):
+            nested = self.pattern() if self.accept("@") else {"wildcard": []}
+            left = {"bind": {"pattern": nested, "name": token}}
+        else:
+            raise SyntaxError(f"Ожидался образец, получено {token!r}")
+        if self.accept(":"):
+            return {"sexp": "cons", "args": [left, self.pattern()]}
+        return left
+
     def expression(self, minimum=0):
         token = self.take()
         if token == "(":
@@ -109,7 +156,6 @@ class Parser:
             for item in reversed(items):
                 left = {"sexp": "cons", "args": [item, left]}
         elif token.startswith('"'):
-            # Эталон сохраняет обратные слеши в STRING буквально.
             left = {"string": token[1:-1].replace('""', '"')}
         elif token.startswith("'"):
             try:
@@ -178,6 +224,23 @@ class Parser:
             return sequence(body)
         if self.accept("if"):
             return self.branch()
+        if self.accept("switch"):
+            scrutinee = self.condition()
+            self.expect("{")
+            branches = []
+            while True:
+                self.expect("case")
+                pattern = self.pattern()
+                self.expect("->")
+                body = []
+                while self.peek() not in ("|", "}"):
+                    body.append(self.statement())
+                branches.append({"pattern": pattern, "branch": sequence(body)})
+                if not self.accept("|"):
+                    break
+            self.expect("}")
+            self.accept(";")
+            return {"switch": {"scrutinee": scrutinee, "branches": branches}}
         if self.accept("while"):
             condition = self.condition()
             return {"while": {"cond": condition, "body": self.statement()}}
@@ -235,7 +298,6 @@ def parse_source(source):
 
 
 def parse_values(source):
-    """Вход read: литералы через запятую (или пробел для прежнего CLI)."""
     def literal(node):
         if "const" in node:
             return node["const"]
